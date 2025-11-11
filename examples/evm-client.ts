@@ -1,45 +1,32 @@
 import { config } from "dotenv";
-import { Account, RpcProvider } from "starknet";
 import { VoyagerClient } from "../src/index.js";
 import type { BlocksResponse } from "../src/types/voyager.js";
 
 config();
 
 const API_URL = process.env.API_URL ?? "http://localhost:4022";
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const STARKNET_ADDRESS = (process.env.STARKNET_ACCOUNT_ADDRESS ??
-  process.env.STARKNET_ADDRESS ??
-  process.env.STARKNET_PAYMENT_ADDRESS)!;
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const STARKNET_PRIVATE_KEY = process.env.STARKNET_CLIENT_PRIVATE_KEY!;
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const STARKNET_RPC_URL = (process.env.STARKNET_RPC_URL ??
-  process.env.STARKNET_SEPOLIA_RPC_URL ??
-  process.env.STARKNET_MAINNET_RPC_URL)!;
 
-function createAccount(): Account {
-  const provider = new RpcProvider({ nodeUrl: STARKNET_RPC_URL });
-  return new Account({
-    provider,
-    address: STARKNET_ADDRESS,
-    signer: STARKNET_PRIVATE_KEY,
-  });
+if (!process.env.PRIVATE_KEY) {
+  throw new Error(
+    "Missing required environment variable: PRIVATE_KEY (EVM private key for Base Sepolia)",
+  );
 }
 
-async function main(): Promise<void> {
-  // Create Starknet account
-  const account = createAccount();
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
+async function main(): Promise<void> {
   // Initialize Voyager SDK with automatic payment handling
   const client = new VoyagerClient({
-    account,
+    account: PRIVATE_KEY,
     apiUrl: API_URL,
     options: {
       onPaymentRequired: (details): void => {
-        console.log(`💰 Payment: ${details.amount} ${details.token}`);
+        console.log(
+          `💰 Payment: ${Number(details.amount) / 10 ** 6} USDC ${details.token}`,
+        );
       },
       onPaymentSettled: (receipt): void => {
-        console.log(`✅ Paid: ${receipt.transactionHash}`);
+        console.log(`✅ Payment tx hash: ${receipt.transactionHash}`);
       },
     },
   });
@@ -67,7 +54,7 @@ async function main(): Promise<void> {
 
 main().catch((error: unknown) => {
   console.error(
-    "❌ Starknet client failed:",
+    "❌ EVM client failed:",
     error instanceof Error ? error.message : error,
   );
   process.exit(1);
