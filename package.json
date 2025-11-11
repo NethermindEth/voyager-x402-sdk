@@ -1,6 +1,6 @@
 {
   "name": "voyager-x402-sdk",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Zero-configuration SDK for Voyager x402 payment-protected APIs - supports both EVM and Starknet",
   "type": "module",
   "main": "dist/index.js",
@@ -30,7 +30,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "prepublishOnly": "bun run clean && bun run build && bun run test"
+    "check": "bun run format:check && bun run type-check && bun run lint",
+    "prepublishOnly": "bun run clean && bun run build && bun run test",
+    "client:evm": "bun run examples/evm-client.ts",
+    "client:starknet": "bun run examples/starknet-client.ts"
   },
   "repository": {
     "type": "git",
@@ -63,13 +66,15 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@types/bun": "latest",
+    "dotenv": "^16.4.5",
     "eslint": "^9.18.0",
+    "eslint-plugin-sonarjs": "^3.0.5",
+    "eslint-plugin-unicorn": "^62.0.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^16.5.0",
     "prettier": "^3.1.0",
     "typescript": "^5.3.0",
-    "typescript-eslint": "^8.46.3",
-    "dotenv": "^16.4.5"
+    "typescript-eslint": "^8.46.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

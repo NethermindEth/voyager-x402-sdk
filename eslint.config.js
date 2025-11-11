@@ -1,18 +1,23 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import unusedImports from "eslint-plugin-unused-imports";
+import sonarjs from "eslint-plugin-sonarjs";
+import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 
-export default tseslint.config(
+export default [
   {
     ignores: [
       "node_modules/**",
+      "**/node_modules/**",
       "dist/**",
+      "**/dist/**",
       "**/*.d.ts",
+      "**/*.d.ts.map",
       "coverage/**",
       "*.config.js",
-      "**/*.js.map",
-      "**/*.d.ts.map",
+      "examples/**",
+      "tests/**",
     ],
   },
   eslint.configs.recommended,
@@ -39,9 +44,18 @@ export default tseslint.config(
     },
     plugins: {
       "unused-imports": unusedImports,
+      sonarjs,
+      unicorn,
     },
     rules: {
       "no-console": "warn",
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "TSEnumDeclaration",
+          message: "Prefer union types over enums.",
+        },
+      ],
       "@typescript-eslint/consistent-type-imports": [
         "error",
         { prefer: "type-imports", fixStyle: "inline-type-imports" },
@@ -72,6 +86,39 @@ export default tseslint.config(
         "error",
         { ignoreConditionalTests: true },
       ],
+      "@typescript-eslint/prefer-reduce-type-parameter": "error",
+      "@typescript-eslint/prefer-regexp-exec": "error",
+      "@typescript-eslint/switch-exhaustiveness-check": "error",
+      "@typescript-eslint/no-unnecessary-type-assertion": "error",
+      "@typescript-eslint/no-unnecessary-condition": [
+        "error",
+        { allowConstantLoopConditions: true },
+      ],
+      "@typescript-eslint/no-confusing-void-expression": [
+        "error",
+        { ignoreArrowShorthand: false },
+      ],
+      "@typescript-eslint/no-duplicate-enum-values": "error",
+      "@typescript-eslint/no-duplicate-type-constituents": "error",
+      "@typescript-eslint/no-import-type-side-effects": "error",
+      "@typescript-eslint/no-redundant-type-constituents": "error",
+      "@typescript-eslint/no-useless-empty-export": "error",
+      "@typescript-eslint/array-type": ["error", { default: "generic" }],
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        { "ts-ignore": "allow-with-description" },
+      ],
+      "@typescript-eslint/naming-convention": [
+        "error",
+        { selector: "typeLike", format: ["PascalCase"] },
+        { selector: "enumMember", format: ["UPPER_CASE", "PascalCase"] },
+        { selector: "variable", format: ["camelCase", "UPPER_CASE"] },
+        {
+          selector: "property",
+          format: null,
+          modifiers: ["requiresQuotes"],
+        },
+      ],
       "@typescript-eslint/no-unused-vars": "off",
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
@@ -81,6 +128,15 @@ export default tseslint.config(
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
           caughtErrors: "all",
+        },
+      ],
+      "unicorn/prefer-structured-clone": "error",
+      "unicorn/no-array-reduce": "off",
+      "unicorn/prevent-abbreviations": [
+        "error",
+        {
+          replacements: { params: false, props: false, ref: false, env: false },
+          ignore: ["ctx", "args", "res", "req"],
         },
       ],
     },
@@ -96,4 +152,4 @@ export default tseslint.config(
       "@typescript-eslint/explicit-function-return-type": "off",
     },
   },
-);
+];
