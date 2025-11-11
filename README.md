@@ -134,17 +134,17 @@ Get current configuration (for debugging).
 
 See the `examples/` directory for working examples:
 
-- `example-evm-client.ts` - EVM/Base network example
-- `example-starknet-client.ts` - Starknet network example
+- `client.ts` - EVM/Base network example
+- `starknet-client.ts` - Starknet network example
 
 Run examples:
 
 ```bash
 # EVM example (requires PRIVATE_KEY and API_URL env vars)
-bun run examples/example-evm-client.ts
+bun run examples/evm-client.ts
 
 # Starknet example (requires STARKNET_* env vars)
-bun run examples/example-starknet-client.ts
+bun run examples/starknet-client.ts
 ```
 
 ## Account Types
@@ -264,7 +264,7 @@ bun run lint
 bun run format
 
 # Run examples
-bun run examples/example-evm-client.ts
+bun run examples/evm-client.ts
 ```
 
 ## License

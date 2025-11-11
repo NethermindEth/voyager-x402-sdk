@@ -36,10 +36,12 @@ npm publish --access public
    - Paste your NPM token
 
 3. Create a GitHub release:
+
    ```bash
    git tag v1.0.0
    git push origin v1.0.0
    ```
+
    - Go to GitHub → Releases → Draft a new release
    - Choose the tag you just created
    - Publish the release
@@ -120,13 +122,17 @@ bun install
 ## Troubleshooting
 
 ### Package name already taken
+
 If `voyager-x402-sdk` is taken, consider:
+
 - `@your-org/voyager-x402-sdk` (scoped package)
 - `voyager-sdk-x402`
 - Another unique name
 
 ### Permission denied
+
 Ensure you have publish access to the package namespace.
 
 ### Build failures
+
 Run `bun run prepublishOnly` locally to test the full build pipeline.
